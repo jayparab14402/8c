@@ -1,0 +1,48 @@
+A)Interpolating point data
+We will take field depth measurements for a Lake Arlington in Texas and then create an elevation relief map 
+and contours from these measurements.
+Required dataset:
+2007-12 survey shapefiles for Lake Arlington i.e. Shapefiles.zip
+Required plugin:
+Interpolation plugin
+1.Add two vector layers “Arlington_soundings_2007_stpl83.shp” and
+“Boundary2004_550_stpl83.shp” (using shift key we can select both the layers at once).
+2.Both the layers are loaded in QGIS. Boundary2004_550_stpl83 represents boundary of lake, uncheck this layer from layer pane.
+3.Now we can see the other layer. Here data looks like lines but they are actually series of points that are very close.
+4.Zoom in the layer so that we can see points representing readings taken by Depth Sounder at the location
+ recorded by DGPS equipment.
+5.Select the Identify tool and click on any point. We will see the Identify Results panel on the left with the 
+attribute value of the point. Here, the ELEVATION attribute contains the depth of the lake at the location.
+ Our task is to create a depth profile and elevation contours, we will use this value as input for the interpolation.
+6.Make sure that “Interpolation plugin” is installed and enabled.
+7.Click on raster  interpolation  interpolation.
+8.In interpolation dialog box, select Arlington_soundings_2007_stpl83 as vector layer in input panel, 
+Chose ELEVATION as interpolation attribute, then click on Add button. Change the Cellsize X and Cellsize Y to 5.
+ This is the size of each pixel in the output grid. Since our source data is in a projected CRS with Feet-US as units,
+ therefore based on our selection, the grid size will be 5 feet. Click on the ... button next to the Output file and name
+ the output file as elevation_tin.tif. Check add result to project. Click on Ok (QGIS interpolation
+supports Triagulated Irregular Network (TIN) and Inverse Distance Weighting (IDW) methods for interpolation).
+9.Now elevation_tin layer is added, if it is not completely visible right click on it and select Zoom to layer.
+10.Now we will see the full extent of the created surface. Interpolation does not give accurate results outside the
+ collection area. So let’s clip the resulting surface with the lake boundary. Click on raster  extraction  clipper.
+11.Select elevation_tin as input file (raster). Give name of output file as elevation_tin_clipped.tif, select mask layer
+ as clipping mode and select Boundary2004_550_stpl83 as mask layer. Make sure that load into canvas when finished is checked.
+ Then click on Ok.
+12.A new raster elevation_tin_clipped will be loaded in QGIS. We will now change style of this layer to show the difference in
+ elevations. Click on + sign against elevation_tin layer in layer pane, now we can note the min and max elevation values. 
+Double click on elevation_tin_clipped layer to open property window.
+13.Click on the Style tab. Select Render type as Singleband pseudocolor. In the Generate new color map panel, select Spectral as
+ color ramp and enter min and max values. Since we want to create a depth-map as opposed to a height-map, check the Invert box. 
+This will assign blues to deep areas and reds to shallow areas. Click on Classify button.
+14.Click on Transparency tab. We want to remove the black-pixels or unknown pixels from our output, so enter 0 as the Additional
+ no data value. Click on Ok.
+15.Now we have an elevation relief map for the lake generated from the individual depth readings. Let’s generate contours now.
+ Click on raster  extraction  contours.
+16.In the Contour dialog box, enter contours as the Output file for contour lines. We will generate contour lines at 5 feet intervals,
+ so enter 5.00 as the Interval between contour lines. Check
+the Attribute name box. Make sure that load into canvas when finished. Click on Ok.
+17.The contour lines will be loaded as contours layer once the processing is finished. Double click on this layer to open property 
+window or right click on contours and select properties.
+18.Click on Labels tab. Check the Label this layer with box and select ELEV as the field. Select Curved as the Placement type and click on Ok.
+19.We will see that each contour line will be appropriately labeled with the elevation along with the line.
+
